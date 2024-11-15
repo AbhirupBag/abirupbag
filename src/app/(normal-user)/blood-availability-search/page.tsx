@@ -217,7 +217,7 @@ export default function BloodAvailabilitySearch() {
               >
                 <option value="">Select City</option>
                 {formData.state &&
-                  cities[formData.state].map((city) => (
+                  cities[formData.state as keyof typeof cities].map((city) => (
                     <option key={city} value={city}>
                       {city}
                     </option>
