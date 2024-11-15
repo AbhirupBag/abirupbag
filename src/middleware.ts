@@ -12,7 +12,7 @@ const isDashboardRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
-  if (isDashboardRoute(req)) {
+  if (isDashboardRoute(req) || isAdminRoute(req)) {
     await auth.protect(); // This will redirect unauthenticated users to the sign-in page
   }
 
@@ -27,7 +27,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   }
 
   if (role !== "admin" && isAdminRoute(req)) {
-    NextResponse.redirect("/");
+    return NextResponse.redirect(new URL("/", req.url));
   }
   return NextResponse.next();
 });

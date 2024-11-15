@@ -6,7 +6,7 @@ import { UserButton } from "@clerk/nextjs";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className=" flex flex-col w-full ">
+      <div className=" flex flex-col w-full min-h-screen ">
         <header className="bg-white shadow-sm">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
@@ -22,19 +22,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 href="/"
                 className="text-gray-600 hover:text-red-600 transition-colors"
               >
-                Dashboard
+                Home
               </Link>
               <Link
-                href="#"
+                href="/admin/blood-banks"
                 className="text-gray-600 hover:text-red-600 transition-colors"
               >
-                Inventory
+                Blood banks
               </Link>
               <Link
-                href="#"
+                href="/admin"
                 className="text-gray-600 hover:text-red-600 transition-colors"
               >
-                Reports
+                Appointments
+              </Link>
+              <Link
+                href="/admin/donaters"
+                className="text-gray-600 hover:text-red-600 transition-colors"
+              >
+                Donaters
               </Link>
               <div>
                 <UserButton />
@@ -42,8 +48,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
         </header>
-        <main className="w-full">{children}</main>
-        <footer className="bg-gray-900 text-white py-8 mt-12">
+        <main className="w-full h-full flex-1 bg-gray-50">{children}</main>
+        <footer className="bg-gray-900 text-white py-8 ">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-1/3 mb-6 md:mb-0">

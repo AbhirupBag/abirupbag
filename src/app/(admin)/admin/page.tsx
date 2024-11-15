@@ -159,8 +159,8 @@ export default function Admin() {
   }, [isLoaded, user]);
 
   return (
-    <div>
-      <div className="bg-gray-50">
+    <div className="min-h-full">
+      <div className="bg-gray-50 h-full">
         <main className="container mx-auto px-4 py-8">
           <motion.div initial="initial" animate="animate" variants={fadeIn}>
             <h1 className="text-3xl font-bold text-gray-900 mb-8">

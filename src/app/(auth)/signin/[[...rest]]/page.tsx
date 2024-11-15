@@ -7,10 +7,11 @@ export default function SignInPage() {
       <SignIn
         appearance={{
           elements: {
-            rootBox: "h-screen w-full bg-gray-300 flex items-center justify-center", 
+            rootBox:
+              "h-screen w-full bg-gray-300 flex items-center justify-center",
           },
         }}
-        forceRedirectUrl="/dashboard"
+        forceRedirectUrl="/"
         signUpUrl="/signup"
       />
     </div>

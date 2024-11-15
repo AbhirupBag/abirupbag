@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +23,8 @@ export default function Component() {
     src: string;
     alt: string;
   }>();
+
+  const { isSignedIn, signOut } = useAuth();
 
   const galleryImages = [
     {
@@ -52,7 +55,6 @@ export default function Component() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
       <header className="fixed top-0 w-full bg-white/90 backdrop-blur-sm z-50 border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
@@ -88,14 +90,28 @@ export default function Component() {
             >
               Gallery
             </Link>
-            <Link href={"/admin"}>
+            {isSignedIn ? (
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 className="px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                onClick={() => {
+                  if (isSignedIn) {
+                    signOut();
+                  }
+                }}
               >
-                Admin Login
+                Logout
               </motion.button>
-            </Link>
+            ) : (
+              <Link href={"/signin"}>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  className="px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                >
+                  Login
+                </motion.button>
+              </Link>
+            )}
           </nav>
         </div>
       </header>
@@ -154,6 +170,34 @@ export default function Component() {
               />
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-red-600">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            className="text-center text-white max-w-3xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Find blood banks near you
+            </h2>
+            <p className="text-xl mb-8 opacity-90">
+              Enter the city and state you live in and find the blood banks
+              around you
+            </p>
+            <Link href={"/blood-banks"}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                className="px-8 py-4 bg-white text-red-600 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors"
+              >
+                Find now
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -329,7 +373,7 @@ export default function Component() {
             className="text-center text-white max-w-3xl mx-auto"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Make a Difference?
+              Ready to make a Difference?
             </h2>
             <p className="text-xl mb-8 opacity-90">
               Your donation can help save multiple lives. Schedule your
