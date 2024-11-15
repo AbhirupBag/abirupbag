@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { cities, states } from "@/lib/locationData";
 import dayjs from "dayjs";
+import { cn } from "@/lib/utils";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -269,6 +270,7 @@ export default function BookAppointment() {
                   </label>
                 </div>
               ))}
+              {bloodBanks.length === 0 && <div>No blood banks found</div>}
             </div>
           )}
 
@@ -323,9 +325,17 @@ export default function BookAppointment() {
               </motion.button>
             )}
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="px-6 py-2 bg-red-600 text-white rounded-md text-lg font-semibold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              whileHover={{
+                scale: step === 2 && bloodBanks.length === 0 ? 1 : 1.05,
+              }}
+              className={cn(
+                "px-6 py-2 bg-red-600 text-white rounded-md text-lg font-semibold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
+                step === 2 && bloodBanks.length === 0
+                  ? "bg-red-300 hover:bg-300"
+                  : ""
+              )}
               type="submit"
+              disabled={step === 2 && bloodBanks.length === 0}
             >
               {isLoading ? (
                 <div className=" animate-spin">
