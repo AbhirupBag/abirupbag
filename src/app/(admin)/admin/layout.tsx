@@ -1,5 +1,4 @@
 "use client";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { UserButton } from "@clerk/nextjs";
@@ -43,11 +42,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
         </header>
-        <main className="w-full">
-          {/*what is the use of sidebar for now*/}
-          {/*<SidebarTrigger/>*/}
-          {children}
-        </main>
+        <main className="w-full">{children}</main>
         <footer className="bg-gray-900 text-white py-8 mt-12">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-between">

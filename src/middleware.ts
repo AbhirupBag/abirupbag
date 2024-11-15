@@ -1,17 +1,35 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import {
+  clerkMiddleware,
+  createRouteMatcher,
+  clerkClient,
+} from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isDashboardRoute = createRouteMatcher([
+  "/book-appointment",
+  "/blood-availability-search",
+]);
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware(async (auth, req: NextRequest) => {
   if (isDashboardRoute(req)) {
     await auth.protect(); // This will redirect unauthenticated users to the sign-in page
   }
 
-  // Protect /admin route: requires the user to have specific permissions
-  if (isAdminRoute(req)) {
-    await auth.protect();
+  const authData = await auth();
+  const userId = authData.userId;
+
+  const client = await clerkClient();
+  let role = "user";
+  if (userId) {
+    const user = await client.users.getUser(userId);
+    role = user.publicMetadata.role as string;
   }
+
+  if (role !== "admin" && isAdminRoute(req)) {
+    NextResponse.redirect("/");
+  }
+  return NextResponse.next();
 });
 
 export const config = {

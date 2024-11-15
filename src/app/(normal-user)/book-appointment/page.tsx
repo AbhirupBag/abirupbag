@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { cities, states } from "@/lib/locationData";
+import dayjs from "dayjs";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -23,14 +23,8 @@ interface BloodBank {
   address: string;
   createdAt: string;
 }
-
 interface IpreviousAppointments {
   id: string;
-  userName: string;
-  userEmail: string;
-  userPhone: string;
-  userId: string;
-  bloodBankId: string;
   date: string;
   status: string;
   createdAt: string;
@@ -38,14 +32,12 @@ interface IpreviousAppointments {
 }
 
 export default function BookAppointment() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded, user } = useUser();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     state: "",
     city: "",
     bloodBank: "",
-    name: "",
-    email: "",
     phone: "",
     date: "",
   });
@@ -68,14 +60,6 @@ export default function BookAppointment() {
   const [isLoading, setisLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (isLoaded) {
-      if (!isSignedIn) {
-        router.push("/signin");
-      }
-    }
-  }, [isSignedIn, isLoaded, router]);
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -83,7 +67,8 @@ export default function BookAppointment() {
 
     setFormData((prevState) => ({
       ...prevState,
-      [name]: name === "date" ? new Date(value) : value, // Convert to Date if name is "date"
+      [name]:
+        name === "date" ? dayjs(new Date(value)).format("YYYY-MM-DD") : value, // Convert to Date if name is "date"
     }));
   };
 
@@ -118,8 +103,6 @@ export default function BookAppointment() {
         method: "POST",
         body: JSON.stringify({
           userId: user?.id,
-          userName: formData.name,
-          userEmail: formData.email,
           userPhone: formData.phone,
           bloodBankId: formData.bloodBank,
           date: formData.date,
@@ -138,8 +121,6 @@ export default function BookAppointment() {
         state: "",
         city: "",
         bloodBank: "",
-        name: "",
-        email: "",
         phone: "",
         date: "",
       });
@@ -295,40 +276,6 @@ export default function BookAppointment() {
             <div className="space-y-6">
               <div>
                 <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-              <div>
-                <label
                   htmlFor="phone"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
@@ -355,7 +302,7 @@ export default function BookAppointment() {
                   type="date"
                   id="date"
                   name="date"
-                  value={formData.date ? formData.date.substring(0, 10) : ""}
+                  value={formData.date ? formData.date : ""}
                   onChange={handleInputChange}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"

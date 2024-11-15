@@ -37,13 +37,30 @@ model BloodStock {
 
 model Appointment {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userName  String
-  userEmail String
-  userPhone String
-  userId      String    
   bloodBankId String    @db.ObjectId
   bloodBank   BloodBank @relation(fields: [bloodBankId], references: [id])
   date        DateTime // Appointment date and time
   status      String // e.g., "Scheduled", "Completed", "Cancelled"
   createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @db.ObjectId
+  phone       String?
+}
+
+model User {
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  clerkUserId      String        @unique
+  name             String?
+  email            String?
+  role             Role          @default(user)
+  contact          String?
+  bloodGroup       String?
+  gender           String?
+  profileCompleted Boolean       @default(false)
+  Appointment      Appointment[]
+}
+
+enum Role {
+  user
+  admin
 }
