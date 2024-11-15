@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URI")
+}
+
+model BloodBank {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  city         String
+  state        String
+  phone        String
+  address      String
+  bloodStocks  BloodStock[] // One-to-many relation with BloodStock
+  appointments Appointment[] // One-to-many relation with Appointment
+  createdAt    DateTime      @default(now())
+}
+
+model BloodStock {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  bloodType   String // e.g., A+, B-, etc.
+  quantity    Int // Quantity in units (e.g., ml)
+  bloodBankId String    @db.ObjectId
+  bloodBank   BloodBank @relation(fields: [bloodBankId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Appointment {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userName  String
+  userEmail String
+  userPhone String
+  userId      String    
+  bloodBankId String    @db.ObjectId
+  bloodBank   BloodBank @relation(fields: [bloodBankId], references: [id])
+  date        DateTime // Appointment date and time
+  status      String // e.g., "Scheduled", "Completed", "Cancelled"
+  createdAt   DateTime  @default(now())
+}
